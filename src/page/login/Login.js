@@ -1,4 +1,5 @@
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
+import Toast from "react-native-tiny-toast";
 import {
   View,
   Text,
@@ -9,6 +10,7 @@ import {
 import firebase from "../../Config/firebase";
 import Header from "../../component/Header";
 import AsyncStorage from "@react-native-community/async-storage";
+import Toast from "../../component/toast";
 
 console.disableYellowBox = true;
 
@@ -29,30 +31,30 @@ export default function App() {
   }
 
   async function logar() {
-    await firebase
-      .auth()
-      .signInWithEmailAndPassword(email, password)
-      .then(async (value) => {
-        await firebase
-          .database()
-          .ref("usuarios")
-          .child(value.user.uid)
-          .once("value")
-          .then(async (resp) => {
-            gravauser(resp.val().nome, value.user.uid);
-          })
-          .catch((error) => {
-            alert("Erro ao inserir user ", error);
-          });
-      })
-      .catch((error) => {
-        alert("Ops algo deu errado!");
-        console.log(error);
-        return;
-      });
-
-    setEmail("");
-    setPassword("");
+    Toast.showSuccess("Pay success");
+    // await firebase
+    //   .auth()
+    //   .signInWithEmailAndPassword(email, password)
+    //   .then(async (value) => {
+    //     await firebase
+    //       .database()
+    //       .ref("usuarios")
+    //       .child(value.user.uid)
+    //       .once("value")
+    //       .then(async (resp) => {
+    //         gravauser(resp.val().nome, value.user.uid);
+    //       })
+    //       .catch((error) => {
+    //         alert("Erro ao inserir user ", error);
+    //       });
+    //   })
+    //   .catch((error) => {
+    //     alert("Ops algo deu errado!");
+    //     console.log(error);
+    //     return;
+    //   });
+    // setEmail("");
+    // setPassword("");
   }
 
   async function gravauser(nome, uid) {
@@ -86,7 +88,11 @@ export default function App() {
       <Header />
       {logado.uid ? (
         <View style={{ marginTop: 10 }}>
-          <TouchableHighlight onPress={logout}>
+          <TouchableHighlight
+            onPress={() => {
+              alert(12345e6);
+            }}
+          >
             <Text style={styles.btn}>Logout</Text>
           </TouchableHighlight>
         </View>
