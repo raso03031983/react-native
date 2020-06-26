@@ -3,6 +3,7 @@ import AsyncStorage from "@react-native-community/async-storage";
 import Picker from "../../component/Picker";
 import Toast from "react-native-tiny-toast";
 import firebase from "../../Config/firebase";
+import { useNavigation } from "@react-navigation/native";
 import { format } from "date-fns";
 import {
   View,
@@ -19,8 +20,10 @@ import Header from "../../component/Header";
 
 export default function financas() {
   const [formData, setFormData] = useState({});
+  const [desc, setDesc] = useState({});
   const [logado, setLogado] = useState({});
   const [tipo, setTipo] = useState({});
+  const navigation = useNavigation();
   const [selectTipo, setSelectTipo] = useState([
     { label: "Receita", value: "receita", color: "#222" },
     { label: "Despesa", value: "despesa", color: "#222" },
@@ -30,18 +33,39 @@ export default function financas() {
     getUser();
   }, []);
 
+  const verificaLogin = () => {
+    console.log(logado.uid);
+
+    if (!logado.uid) {
+      Alert.alert(
+        "Confirmação !!",
+        "É necessário fazer Login para registrar uma transação ",
+        [
+          {
+            text: "Cancelar",
+            style: "cancel",
+          },
+          {
+            text: "Fazer Login",
+            onPress: () => navigation.navigate("Login"),
+          },
+        ]
+      );
+      return false;
+    }
+  };
+
   async function getUser() {
     const storageUser = await AsyncStorage.getItem("uid");
     const storageNome = await AsyncStorage.getItem("nome");
     setLogado({ ...logado, uid: storageUser, nome: storageNome });
   }
 
-  useEffect(() => {
-    console.log(tipo);
-  }, [tipo]);
-
   const handleRegistrar = () => {
     Keyboard.dismiss(); //fecha o teclado
+    if (verificaLogin() == false) {
+      return false;
+    }
     if (isNaN(parseFloat(formData)) || tipo === null) {
       Toast.show("Todos os Campos são Obrigatórios");
       return;
@@ -81,8 +105,12 @@ export default function financas() {
         tipo: tipo,
         valor: parseFloat(formData),
         date: format(new Date(), "dd/MM/yy"),
+        descricao: !desc ? "sem descrição" : desc,
       })
       .then(() => {
+        setTipo(null);
+        setFormData("");
+        setDesc("");
         Toast.hide();
         Toast.showSuccess("Transação Realizada !");
       })
@@ -96,6 +124,14 @@ export default function financas() {
     <View>
       <Header />
       <SafeAreaView>
+        <Text style={styles.texto}>Descrição</Text>
+        <TextInput
+          style={styles.input}
+          underlineColorAndroid="transparent"
+          onChangeText={(texto) => setDesc(texto)}
+          value={desc}
+        />
+
         <Text style={styles.texto}>Valor</Text>
         <TextInput
           keyboardType="numeric"

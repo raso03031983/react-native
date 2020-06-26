@@ -30,6 +30,12 @@ export default function App() {
   }
 
   async function logar() {
+    if (!email || !password) {
+      Toast.hide();
+      Toast.show("Email e senha são obrigatórios");
+      return false;
+    }
+
     Toast.showLoading("Verificando Dados");
     await firebase
       .auth()

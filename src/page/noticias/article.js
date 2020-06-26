@@ -114,11 +114,13 @@ function article(props) {
         <Text style={styles.nomeUsuario}> {props.data.title} </Text>
       </View>
 
-      <Image
-        resizeMode="cover"
-        style={styles.fotoPublicacao}
-        source={{ uri: props.data.urlToImage }}
-      />
+      <View style={{ justifyContent: "center", alignItems: "center" }}>
+        <Image
+          style={styles.fotoPublicacao}
+          source={{ uri: props.data.urlToImage }}
+        />
+      </View>
+
       <View style={styles.viewRodape}>
         <Text style={styles.nomeRodape}>{props.data.source.name}</Text>
         <Text style={styles.descRodape}>{props.data.author}</Text>
@@ -137,7 +139,7 @@ function article(props) {
     </View>
   );
 }
-
+const width_proportion = "95%";
 const styles = StyleSheet.create({
   areaFeed: {
     borderColor: "#000000",
@@ -158,6 +160,8 @@ const styles = StyleSheet.create({
     flex: 1,
     height: 400,
     alignItems: "center",
+    justifyContent: "center",
+    width: width_proportion,
   },
   viewPerfil: {
     flexDirection: "row",
