@@ -9,6 +9,7 @@ import {
 import firebase from "../../Config/firebase";
 import Header from "../../component/Header";
 import AsyncStorage from "@react-native-community/async-storage";
+import Toast from "react-native-tiny-toast";
 
 console.disableYellowBox = true;
 
@@ -29,6 +30,7 @@ export default function App() {
   }
 
   async function logar() {
+    Toast.showLoading("Verificando Dados");
     await firebase
       .auth()
       .signInWithEmailAndPassword(email, password)
@@ -40,14 +42,17 @@ export default function App() {
           .once("value")
           .then(async (resp) => {
             gravauser(resp.val().nome, value.user.uid);
+            Toast.hide();
+            Toast.showSuccess("Login Realizado :)");
           })
           .catch((error) => {
-            alert("Erro ao inserir user ", error);
+            Toast.hide();
+            Toast.show("Erro ao logar");
           });
       })
       .catch((error) => {
-        alert("Ops algo deu errado!");
-        console.log(error);
+        Toast.hide();
+        Toast.show("Ops algo deu errado!");
         return;
       });
 
@@ -59,26 +64,13 @@ export default function App() {
     await AsyncStorage.setItem("uid", uid);
     await AsyncStorage.setItem("nome", nome);
     getUser();
-    alert("Login Realizado");
   }
 
   async function logout() {
     await firebase.auth().signOut();
     AsyncStorage.clear();
     setLogado({});
-    alert("Deslgoado com sucesso!");
-  }
-
-  async function cadastrar() {
-    await firebase
-      .auth()
-      .createUserWithEmailAndPassword(email, password)
-      .then((value) => {
-        alert(`Cadastro Realizado ${value.user.email}`);
-      })
-      .catch((error) => {
-        alert(`Erro: ${error}`);
-      });
+    Toast.showSuccess("Deslgoado com sucesso!");
   }
 
   return (
@@ -94,6 +86,7 @@ export default function App() {
         <>
           <Text style={styles.texto}>Email</Text>
           <TextInput
+            keyboardType="email-address"
             style={styles.input}
             underlineColorAndroid="transparent"
             onChangeText={(texto) => setEmail(texto)}

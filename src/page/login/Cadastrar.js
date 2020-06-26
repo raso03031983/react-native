@@ -1,68 +1,46 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
   StyleSheet,
   TextInput,
-  Button,
   TouchableHighlight,
-  ActivityIndicator,
-} from 'react-native';
-import firebase from '../../Config/firebase';
-import Header from '../../component/Header';
+} from "react-native";
+import firebase from "../../Config/firebase";
+import Header from "../../component/Header";
+import Toast from "react-native-tiny-toast";
 
 console.disableYellowBox = true;
 
 export default function App() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [nome, setNome] = useState('');
-  const [user, setUser] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [nome, setNome] = useState("");
+  const [user, setUser] = useState("");
   const [refreshing, setRefreshing] = React.useState(false);
 
-  async function logar() {
-    await firebase
-      .auth()
-      .signInWithEmailAndPassword(email, password)
-      .then(value => {
-        alert('Bem-vindo: ' + value.user.email);
-        setUser(value.user.email);
-      })
-      .catch(error => {
-        alert('Ops algo deu errado!');
-        return;
-      });
-
-    setEmail('');
-    setPassword('');
-  }
-
-  async function logout() {
-    await firebase.auth().signOut();
-    setUser('');
-    alert('Deslgoado com sucesso!');
-  }
-
   async function cadastrar() {
-    console.log(email, password);
+    Toast.showLoading("Verificando Dados");
     await firebase
       .auth()
       .createUserWithEmailAndPassword(email, password)
-      .then(value => {
+      .then((value) => {
         firebase
           .database()
-          .ref('usuarios')
+          .ref("usuarios")
           .child(value.user.uid)
           .set({
             nome: nome,
           });
-        setEmail('');
-        setNome('');
-        setPassword('');
-        alert(`Cadastro Realizado ${value.user.email}`);
+        setEmail("");
+        setNome("");
+        setPassword("");
+        Toast.hide();
+        Toast.showSuccess(`Cadastro Realizado ${value.user.email}`);
       })
-      .catch(error => {
-        alert(`Erro: ${error}`);
+      .catch((error) => {
+        Toast.hide();
+        Toast.show("Erro ao Cadastrar");
       });
   }
 
@@ -73,7 +51,7 @@ export default function App() {
       <TextInput
         style={styles.input}
         underlineColorAndroid="transparent"
-        onChangeText={texto => setNome(texto)}
+        onChangeText={(texto) => setNome(texto)}
         value={nome}
       />
 
@@ -81,7 +59,7 @@ export default function App() {
       <TextInput
         style={styles.input}
         underlineColorAndroid="transparent"
-        onChangeText={texto => setEmail(texto)}
+        onChangeText={(texto) => setEmail(texto)}
         value={email}
       />
 
@@ -89,7 +67,7 @@ export default function App() {
       <TextInput
         style={styles.input}
         underlineColorAndroid="transparent"
-        onChangeText={texto => setPassword(texto)}
+        onChangeText={(texto) => setPassword(texto)}
         value={password}
         secureTextEntry
       />
@@ -117,7 +95,7 @@ const styles = StyleSheet.create({
     marginRight: 5,
     padding: 10,
     borderWidth: 1,
-    borderColor: '#121212',
+    borderColor: "#121212",
     height: 45,
     fontSize: 17,
   },
@@ -125,8 +103,8 @@ const styles = StyleSheet.create({
     marginLeft: 5,
     marginRight: 5,
     fontSize: 25,
-    textAlign: 'center',
-    backgroundColor: '#ffd700',
+    textAlign: "center",
+    backgroundColor: "#ffd700",
     padding: 5,
   },
 });
