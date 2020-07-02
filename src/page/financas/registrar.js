@@ -5,6 +5,7 @@ import Toast from "react-native-tiny-toast";
 import firebase from "../../Config/firebase";
 import { useNavigation } from "@react-navigation/native";
 import { format } from "date-fns";
+
 import {
   View,
   TouchableHighlight,
@@ -18,7 +19,7 @@ import {
 
 import Header from "../../component/Header";
 
-export default function financas() {
+export default function financas(props) {
   const [formData, setFormData] = useState({});
   const [desc, setDesc] = useState({});
   const [logado, setLogado] = useState({});
@@ -34,8 +35,6 @@ export default function financas() {
   }, []);
 
   const verificaLogin = () => {
-    console.log(logado.uid);
-
     if (!logado.uid) {
       Alert.alert(
         "Confirmação !!",
@@ -106,18 +105,28 @@ export default function financas() {
         valor: parseFloat(formData),
         date: format(new Date(), "dd/MM/yy"),
         descricao: !desc ? "sem descrição" : desc,
-      })
-      .then(() => {
-        setTipo(null);
-        setFormData("");
-        setDesc("");
-        Toast.hide();
-        Toast.showSuccess("Transação Realizada !");
-      })
-      .error(() => {
-        Toast.hide();
-        Toast.show("Erro ao realizara transação");
       });
+
+    let userBD = firebase
+      .database()
+      .ref("usuarios")
+      .child(logado.uid);
+
+    await userBD.once("value").then((snapchot) => {
+      let saldo = parseFloat(snapchot.val().saldo);
+
+      tipo == "despesa"
+        ? (saldo -= parseFloat(formData))
+        : (saldo += parseFloat(formData));
+
+      userBD.child("saldo").set(saldo);
+
+      setTipo(null);
+      setFormData("");
+      setDesc("");
+      Toast.hide();
+      Toast.showSuccess("Transação Realizada !");
+    });
   }
 
   return (

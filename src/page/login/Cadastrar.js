@@ -5,6 +5,7 @@ import {
   StyleSheet,
   TextInput,
   TouchableHighlight,
+  Keyboard,
 } from "react-native";
 import firebase from "../../Config/firebase";
 import Header from "../../component/Header";
@@ -31,7 +32,9 @@ export default function App() {
           .child(value.user.uid)
           .set({
             nome: nome,
+            saldo: 0,
           });
+        Keyboard.dismiss();
         setEmail("");
         setNome("");
         setPassword("");
@@ -39,6 +42,7 @@ export default function App() {
         Toast.showSuccess(`Cadastro Realizado ${value.user.email}`);
       })
       .catch((error) => {
+        console.log(error);
         Toast.hide();
         Toast.show("Erro ao Cadastrar");
       });
