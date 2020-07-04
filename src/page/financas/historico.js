@@ -5,8 +5,6 @@ import { View, StyleSheet, Text, SafeAreaView, FlatList } from "react-native";
 import { format } from "date-fns";
 import MovimentacaoItem from "./movimentacaoItem";
 
-import Header from "../../component/Header";
-
 export default function financas() {
   const [logado, setLogado] = useState({});
   const [saldo, setSaldo] = useState(0);
@@ -59,7 +57,6 @@ export default function financas() {
 
   return (
     <View>
-      <Header />
       <SafeAreaView>
         <Text style={styles.texto}>
           Olá {logado.nome} seu saldo é de{" "}

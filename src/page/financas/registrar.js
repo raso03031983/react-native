@@ -131,7 +131,6 @@ export default function financas(props) {
 
   return (
     <View>
-      <Header />
       <SafeAreaView>
         <Text style={styles.texto}>Descrição</Text>
         <TextInput

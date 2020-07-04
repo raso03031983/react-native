@@ -1,39 +1,26 @@
 import * as React from "react";
+import { useDispatch } from "react-redux";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Icons from "react-native-vector-icons/MaterialIcons";
 import AsyncStorage from "@react-native-community/async-storage";
-import { Alert } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import Registrar from "./registrar";
-import Movimentacao from "./movimentacao";
-import Historico from "./historico";
+import ActionFood from "./action.food";
+
 import Header from "../../component/Header";
+
+import Principal from "./principal";
+import Pedidos from "./pedidos";
+import Historico from "./historico";
 
 const Tab = createBottomTabNavigator();
 
 export default function App() {
+  const dispatch = useDispatch();
   const navigation = useNavigation();
   const [logado, setLogado] = React.useState({});
 
   React.useEffect(() => {
     getUser();
-
-    // if (!logado.uid) {
-    //   Alert.alert(
-    //     "Aviso",
-    //     "É necessário fazer Login para registrar uma transação ",
-    //     [
-    //       {
-    //         text: "Cancelar",
-    //         onPress: () => navigation.navigate("Home"),
-    //       },
-    //       {
-    //         text: "Fazer Login",
-    //         onPress: () => navigation.navigate("Login"),
-    //       },
-    //     ]
-    //   );
-    // }
   }, []);
 
   async function getUser() {
@@ -43,11 +30,11 @@ export default function App() {
   }
 
   const icons = {
-    Registrar: {
-      name: "done-all",
+    Principal: {
+      name: "local-dining",
     },
-    Movimentação: {
-      name: "format-line-spacing",
+    Pedidos: {
+      name: "shopping-cart",
     },
     Histórico: {
       name: "equalizer",
@@ -71,8 +58,8 @@ export default function App() {
           activeTintColor: "#ffd700",
         }}
       >
-        <Tab.Screen name="Registrar" component={Registrar} />
-        <Tab.Screen name="Movimentação" component={Movimentacao} />
+        <Tab.Screen name="Principal" component={Principal} />
+        <Tab.Screen name="Pedidos" component={Pedidos} />
         <Tab.Screen name="Histórico" component={Historico} />
       </Tab.Navigator>
     </>

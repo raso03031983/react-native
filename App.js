@@ -11,6 +11,7 @@ import Home from "./src/page/home.js";
 import Noticias from "./src/page/noticias";
 import Login from "./src/page/login";
 import Financas from "./src/page/financas";
+import Food from "./src/page/food";
 
 const Drawer = createDrawerNavigator();
 
@@ -83,6 +84,22 @@ export default function App() {
                 1 > 0 ? (
                   <Icons
                     name={"attach-money"}
+                    color={colorIcon}
+                    size={sizeIcon}
+                  />
+                ) : null,
+            }}
+          />
+          <Drawer.Screen
+            name="Food"
+            component={Food}
+            options={{
+              drawerLabel: () =>
+                1 > 0 ? <Text style={styles.text}>Food</Text> : null,
+              drawerIcon: () =>
+                1 > 0 ? (
+                  <Icons
+                    name={"local-pizza"}
                     color={colorIcon}
                     size={sizeIcon}
                   />

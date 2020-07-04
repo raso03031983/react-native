@@ -1,18 +1,17 @@
-import * as React from 'react';
+import * as React from "react";
 import {
   ActivityIndicator,
   View,
   FlatList,
   StyleSheet,
   RefreshControl,
-} from 'react-native';
-import {useDispatch, useSelector} from 'react-redux';
-import Action from './action.noticia';
-import Header from '../../component/Header';
-import Article from './article';
+} from "react-native";
+import { useDispatch, useSelector } from "react-redux";
+import Action from "./action.noticia";
+import Article from "./article";
 
 function Esporte(props) {
-  const {ListSports = [], nwstate} = useSelector(state => state.Noticias);
+  const { ListSports = [], nwstate } = useSelector((state) => state.Noticias);
   const [refreshing, setRefreshing] = React.useState(false);
   const dispatch = useDispatch();
 
@@ -30,19 +29,18 @@ function Esporte(props) {
     setRefreshing(false);
   };
 
-  if (nwstate === 'FETCHING') {
+  if (nwstate === "FETCHING") {
     return (
-      <View style={{alignItems: 'center', justifyContent: 'center', flex: 1}}>
+      <View style={{ alignItems: "center", justifyContent: "center", flex: 1 }}>
         <ActivityIndicator color="#ffd700" size={40} />
       </View>
     );
   } else {
     return (
       <View style={styles.container}>
-        <Header />
         <FlatList
           data={ListSports.articles}
-          renderItem={({item, index}) => (
+          renderItem={({ item, index }) => (
             <Article
               data={item}
               index={index}
