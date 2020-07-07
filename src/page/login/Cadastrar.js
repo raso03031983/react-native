@@ -1,51 +1,33 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useContext } from "react";
 import {
   View,
   Text,
   StyleSheet,
   TextInput,
   TouchableHighlight,
-  Keyboard,
 } from "react-native";
-import firebase from "../../Config/firebase";
 import Header from "../../component/Header";
+import { AuthContext } from "../../contexts/AuthContex";
 import Toast from "react-native-tiny-toast";
 
 console.disableYellowBox = true;
 
 export default function App() {
+  const { cadastrar } = useContext(AuthContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [nome, setNome] = useState("");
-  const [user, setUser] = useState("");
-  const [refreshing, setRefreshing] = React.useState(false);
 
-  async function cadastrar() {
-    Toast.showLoading("Verificando Dados");
-    await firebase
-      .auth()
-      .createUserWithEmailAndPassword(email, password)
-      .then((value) => {
-        firebase
-          .database()
-          .ref("usuarios")
-          .child(value.user.uid)
-          .set({
-            nome: nome,
-            saldo: 0,
-          });
-        Keyboard.dismiss();
-        setEmail("");
-        setNome("");
-        setPassword("");
-        Toast.hide();
-        Toast.showSuccess(`Cadastro Realizado ${value.user.email}`);
-      })
-      .catch((error) => {
-        console.log(error);
-        Toast.hide();
-        Toast.show("Erro ao Cadastrar");
-      });
+  function handleusuario() {
+    console.log(email, password, nome);
+    if (!email || !password || !nome) {
+      Toast.show("Todos os campos são obrigatórios");
+      return;
+    }
+    cadastrar(nome, email, password);
+    setEmail("");
+    setNome("");
+    setPassword("");
   }
 
   return (
@@ -76,7 +58,7 @@ export default function App() {
         secureTextEntry
       />
 
-      <TouchableHighlight onPress={cadastrar}>
+      <TouchableHighlight onPress={handleusuario}>
         <Text style={styles.btn}>Cadastrar</Text>
       </TouchableHighlight>
     </View>

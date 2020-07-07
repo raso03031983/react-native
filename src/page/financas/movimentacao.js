@@ -1,32 +1,33 @@
-import React, { useState, useEffect } from "react";
-import AsyncStorage from "@react-native-community/async-storage";
+import React, { useState, useContext } from "react";
 import firebase from "../../Config/firebase";
 import { View, StyleSheet, Text, SafeAreaView, FlatList } from "react-native";
-import { format } from "date-fns";
+import { AuthContext } from "../../contexts/AuthContex";
 import MovimentacaoItem from "./movimentacaoItem";
 
-export default function financas() {
-  const [logado, setLogado] = useState({});
+export default function financas({ navigation }) {
+  const { user } = useContext(AuthContext);
   const [saldo, setSaldo] = useState(0);
   const [historico, setHistorico] = useState([]);
 
-  useEffect(() => {
-    getUser();
+  // React.useEffect(() => {
+  //   navigation.addListener("focus", () => {
+  //     getSaldo();
+  //     getHistorico();
+
+  //     console.log("setSaldo ", setSaldo);
+  //   });
+  // }, [navigation]);
+
+  React.useEffect(() => {
     getSaldo();
     getHistorico();
   }, []);
-
-  async function getUser() {
-    const storageUser = await AsyncStorage.getItem("uid");
-    const storageNome = await AsyncStorage.getItem("nome");
-    setLogado({ ...logado, uid: storageUser, nome: storageNome });
-  }
 
   async function getSaldo() {
     await firebase
       .database()
       .ref("usuarios")
-      .child(logado.uid)
+      .child(user.uid)
       .on("value", (snapshot) => {
         setSaldo(snapshot.val().saldo);
       });
@@ -36,20 +37,21 @@ export default function financas() {
     await firebase
       .database()
       .ref("historico")
-      .child(logado.uid)
+      .child(user.uid)
       .orderByChild("date")
-      .equalTo(format(new Date(), "dd/MM/yy"))
+      //.equalTo(format(new Date(), "dd/MM/yy"))
       .on("value", (snapchot) => {
         setHistorico([]);
 
         snapchot.forEach((item) => {
+          console.log("dados: ", item);
           let list = {
             key: item.key,
             tipo: item.val().tipo,
             valor: item.val().valor,
             desc: item.val().descricao,
             date: item.val().date,
-            user: logado.uid,
+            user: user.uid,
           };
           setHistorico((oldArray) => [...oldArray, list].reverse());
         });
@@ -60,7 +62,7 @@ export default function financas() {
     <View>
       <SafeAreaView>
         <Text style={styles.texto}>
-          Olá {logado.nome} seu saldo é de{" "}
+          Olá {user.nome} seu saldo é de{" "}
           {saldo.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.")}
         </Text>
         <FlatList

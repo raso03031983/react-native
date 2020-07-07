@@ -2,7 +2,6 @@ import * as React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Icons from "react-native-vector-icons/MaterialIcons";
 import AsyncStorage from "@react-native-community/async-storage";
-import { Alert } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import Registrar from "./registrar";
 import Movimentacao from "./movimentacao";
@@ -17,23 +16,6 @@ export default function App() {
 
   React.useEffect(() => {
     getUser();
-
-    // if (!logado.uid) {
-    //   Alert.alert(
-    //     "Aviso",
-    //     "É necessário fazer Login para registrar uma transação ",
-    //     [
-    //       {
-    //         text: "Cancelar",
-    //         onPress: () => navigation.navigate("Home"),
-    //       },
-    //       {
-    //         text: "Fazer Login",
-    //         onPress: () => navigation.navigate("Login"),
-    //       },
-    //     ]
-    //   );
-    // }
   }, []);
 
   async function getUser() {

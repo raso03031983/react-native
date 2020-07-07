@@ -1,5 +1,6 @@
-import * as React from "react";
+import React, { useState, useContext } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { AuthContext } from "../../contexts/AuthContex";
 import {
   Text,
   View,
@@ -14,6 +15,7 @@ import AsyncStorage from "@react-native-community/async-storage";
 import firebase from "../../Config/firebase";
 
 function article(props) {
+  const { signed } = useContext(AuthContext);
   const {
     ListGeral = [],
     ListAtualidades = [],
@@ -23,7 +25,6 @@ function article(props) {
     nwstate,
   } = useSelector((state) => state.Noticias);
   const [modal, setModal] = React.useState(null);
-  const [logado, setLogado] = React.useState({});
   let [list, setList] = React.useState([]);
 
   React.useEffect(() => {
@@ -39,16 +40,6 @@ function article(props) {
       setList(ListEntretenimento);
     }
   }, [props.paramTabFocus]);
-
-  React.useEffect(() => {
-    getUser();
-  }, []);
-
-  async function getUser() {
-    const storageUser = await AsyncStorage.getItem("uid");
-    const storageNome = await AsyncStorage.getItem("nome");
-    setLogado({ ...logado, uid: storageUser, nome: storageNome });
-  }
 
   const handleClickOpenModal = (index) => {
     setModal(
@@ -129,9 +120,13 @@ function article(props) {
         <TouchableOpacity onPress={() => handleClickOpenModal(props.index)}>
           <Icons name={"turned-in"} color={"#ffd700"} size={35} />
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => hadleFavoritar()}>
-          <Icons name={"star"} color={"#ffd700"} size={35} />
-        </TouchableOpacity>
+
+        {signed && (
+          <TouchableOpacity onPress={() => hadleFavoritar()}>
+            <Icons name={"star"} color={"#ffd700"} size={35} />
+          </TouchableOpacity>
+        )}
+
         <TouchableOpacity style={styles.btnSend} onPress={() => hadleShared()}>
           <Icons name={"share"} color={"#ffd700"} size={35} />
         </TouchableOpacity>

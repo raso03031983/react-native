@@ -102,7 +102,7 @@ export default function financas(props) {
       .child(key)
       .set({
         tipo: tipo,
-        valor: parseFloat(formData),
+        valor: formatCurrency(parseFloat(formData)),
         date: format(new Date(), "dd/MM/yy"),
         descricao: !desc ? "sem descrição" : desc,
       });
@@ -121,13 +121,18 @@ export default function financas(props) {
 
       userBD.child("saldo").set(saldo);
 
-      setTipo(null);
       setFormData("");
       setDesc("");
       Toast.hide();
       Toast.showSuccess("Transação Realizada !");
     });
   }
+
+  const formatCurrency = (amount) => {
+    return Number(amount)
+      .toFixed(2)
+      .replace(/\d(?=(\d{3})+\.)/g, "$&,");
+  };
 
   return (
     <View>

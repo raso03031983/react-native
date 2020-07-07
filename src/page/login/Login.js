@@ -6,85 +6,40 @@ import {
   TextInput,
   TouchableHighlight,
 } from "react-native";
-import firebase from "../../Config/firebase";
 import Header from "../../component/Header";
-import AsyncStorage from "@react-native-community/async-storage";
 import Toast from "react-native-tiny-toast";
+import { AuthContext } from "../../contexts/AuthContex";
 
 console.disableYellowBox = true;
 
 export default function App() {
+  const { logar, signed, logout } = useContext(AuthContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [nome, setNome] = useState("");
-  const [logado, setLogado] = React.useState({});
 
-  React.useEffect(() => {
-    getUser();
-  }, []);
-
-  async function getUser() {
-    const storageUser = await AsyncStorage.getItem("uid");
-    const storageNome = await AsyncStorage.getItem("nome");
-    setLogado({ ...logado, uid: storageUser, nome: storageNome });
-  }
-
-  async function logar() {
+  function handleLogin() {
     if (!email || !password) {
       Toast.hide();
       Toast.show("Email e senha são obrigatórios");
-      return false;
+      return;
     }
-
-    Toast.showLoading("Verificando Dados");
-    await firebase
-      .auth()
-      .signInWithEmailAndPassword(email, password)
-      .then(async (value) => {
-        await firebase
-          .database()
-          .ref("usuarios")
-          .child(value.user.uid)
-          .once("value")
-          .then(async (resp) => {
-            gravauser(resp.val().nome, value.user.uid);
-            Toast.hide();
-            Toast.showSuccess("Login Realizado :)");
-          })
-          .catch((error) => {
-            Toast.hide();
-            Toast.show("Erro ao logar");
-          });
-      })
-      .catch((error) => {
-        Toast.hide();
-        Toast.show("Ops algo deu errado!");
-        return;
-      });
-
-    setEmail("");
-    setPassword("");
+    logar(email, password);
   }
 
-  async function gravauser(nome, uid) {
-    await AsyncStorage.setItem("uid", uid);
-    await AsyncStorage.setItem("nome", nome);
-    getUser();
-  }
-
-  async function logout() {
-    await firebase.auth().signOut();
-    AsyncStorage.clear();
-    setLogado({});
-    Toast.showSuccess("Deslgoado com sucesso!");
+  async function handleLogout() {
+    logout();
   }
 
   return (
     <View>
       <Header />
-      {logado.uid ? (
-        <View style={{ marginTop: 10 }}>
-          <TouchableHighlight onPress={logout}>
+      {signed ? (
+        <View
+          style={{
+            marginTop: 10,
+          }}
+        >
+          <TouchableHighlight onPress={handleLogout}>
             <Text style={styles.btn}>Logout</Text>
           </TouchableHighlight>
         </View>
@@ -106,7 +61,7 @@ export default function App() {
             onChangeText={(texto) => setPassword(texto)}
             value={password}
           />
-          <TouchableHighlight onPress={logar}>
+          <TouchableHighlight onPress={handleLogin}>
             <Text style={styles.btn}>Login</Text>
           </TouchableHighlight>
         </>
@@ -143,5 +98,6 @@ const styles = StyleSheet.create({
     textAlign: "center",
     backgroundColor: "#ffd700",
     padding: 5,
+    borderRadius: 30,
   },
 });

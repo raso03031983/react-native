@@ -8,15 +8,13 @@ import {
   StyleSheet,
   TouchableWithoutFeedback,
   Alert,
+  Image,
 } from "react-native";
-
+import Icons from "react-native-vector-icons/MaterialIcons";
 export default function movimentacaoItem(props) {
   useEffect(() => {}, []);
 
   function handleDelete(param) {
-    if (isPast(new Date(param.date))) {
-      Toast.show("Não é permitido excluir registros antigos");
-    }
     Alert.alert(
       "Confirmação !!",
       `Voçê deseja excluir o registro ${param.desc}`,
@@ -34,6 +32,10 @@ export default function movimentacaoItem(props) {
   }
 
   async function handleConfirnDelete(param) {
+    if (isPast(new Date(param.date))) {
+      Toast.show("Não é permitido excluir registros antigos");
+      return;
+    }
     Toast.showLoading("Verificando Dados");
     try {
       await firebase
@@ -67,22 +69,39 @@ export default function movimentacaoItem(props) {
   }
 
   return (
+    // <TouchableWithoutFeedback onLongPress={() => handleDelete(props.param)}>
+    //   <View style={styles.container}>
+    //     <View style={styles.desc}>
+    //       <Text style={styles.font}>{props.param.desc}</Text>
+    //     </View>
+    //     <View style={styles.subDesc}>
+    //       <Text
+    //         style={[
+    //           styles.text,
+    //           props.param.tipo == "receita" ? styles.tipoGreen : styles.tipoRed,
+    //         ]}
+    //       >
+    //         {props.param.tipo}
+    //       </Text>
+    //       <Text style={styles.font2}>{props.param.valor}</Text>
+    //       <Text style={styles.font2}>{props.param.date}</Text>
+    //     </View>
+    //   </View>
+    // </TouchableWithoutFeedback>
     <TouchableWithoutFeedback onLongPress={() => handleDelete(props.param)}>
-      <View style={styles.container}>
-        <View style={styles.desc}>
-          <Text style={styles.font}>{props.param.desc}</Text>
+      <View style={styles.notificationBox}>
+        <View>
+          {props.param.tipo == "receita" ? (
+            <Icons name={"arrow-upward"} color={"#32CD32"} size={35} />
+          ) : (
+            <Icons name={"arrow-downward"} color={"#B22222"} size={35} />
+          )}
         </View>
-        <View style={styles.subDesc}>
-          <Text
-            style={[
-              styles.text,
-              props.param.tipo == "receita" ? styles.tipoGreen : styles.tipoRed,
-            ]}
-          >
-            {props.param.tipo}
+        <View>
+          <Text style={styles.texto}>{props.param.desc}</Text>
+          <Text style={styles.texto}>
+            {props.param.valor} - {props.param.date}
           </Text>
-          <Text style={styles.font2}>{props.param.valor}</Text>
-          <Text style={styles.font2}>{props.param.date}</Text>
         </View>
       </View>
     </TouchableWithoutFeedback>
@@ -90,49 +109,20 @@ export default function movimentacaoItem(props) {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    margin: 5,
-  },
-  font: {
-    fontSize: 20,
-    fontWeight: "bold",
-  },
-  font2: {
-    fontSize: 20,
-  },
-  desc: {
-    textAlign: "center",
-    justifyContent: "center",
+  notificationBox: {
+    padding: 20,
+    marginTop: 5,
+    marginBottom: 5,
+    marginLeft: 5,
+    marginRight: 5,
+    backgroundColor: "#121212",
     flexDirection: "row",
-    marginBottom: 10,
-    fontSize: 25,
-    backgroundColor: "#ffd700",
-    fontWeight: "bold",
-    padding: 4,
     borderRadius: 10,
   },
-  descView: {
-    flexDirection: "row",
-  },
-  subDesc: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-  },
-  tipoGreen: {
-    color: "white",
-    backgroundColor: "green",
+  texto: {
+    color: "#ffd700",
+    fontSize: 18,
     fontWeight: "bold",
-    fontSize: 20,
-    borderRadius: 5,
-    padding: 3,
-  },
-  tipoRed: {
-    color: "white",
-    backgroundColor: "red",
-    fontWeight: "bold",
-    fontSize: 20,
-    borderRadius: 5,
-    padding: 3,
+    marginLeft: 10,
   },
 });

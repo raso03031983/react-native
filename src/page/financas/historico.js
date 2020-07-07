@@ -12,9 +12,12 @@ export default function financas() {
 
   useEffect(() => {
     getUser();
+  }, []);
+
+  useEffect(() => {
     getSaldo();
     getHistorico();
-  }, []);
+  }, [logado]);
 
   async function getUser() {
     const storageUser = await AsyncStorage.getItem("uid");

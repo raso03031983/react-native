@@ -4,7 +4,7 @@ import { View, Text } from "react-native";
 export default function food() {
   return (
     <View>
-      <Text>Hostorico</Text>
+      <Text>Historico</Text>
     </View>
   );
 }
