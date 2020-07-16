@@ -15,7 +15,7 @@ import AsyncStorage from "@react-native-community/async-storage";
 import firebase from "../../Config/firebase";
 
 function article(props) {
-  const { signed } = useContext(AuthContext);
+  const { signed, user } = useContext(AuthContext);
   const {
     ListGeral = [],
     ListAtualidades = [],
@@ -65,7 +65,7 @@ function article(props) {
       const dateTime = new Date().getTime();
       firebase
         .database()
-        .ref(`favoritos/${logado.uid}/${dateTime}`)
+        .ref(`favoritos/${user.uid}/${dateTime}`)
         .set({
           author: props.data.author,
           content: props.data.content,
@@ -106,10 +106,17 @@ function article(props) {
       </View>
 
       <View style={{ justifyContent: "center", alignItems: "center" }}>
-        <Image
-          style={styles.fotoPublicacao}
-          source={{ uri: props.data.urlToImage }}
-        />
+        {props.data.urlToImage == null ? (
+          <Image
+            style={styles.fotoPublicacao}
+            source={require("../../assets/default.jpg")}
+          />
+        ) : (
+          <Image
+            style={styles.fotoPublicacao}
+            source={{ uri: props.data.urlToImage }}
+          />
+        )}
       </View>
 
       <View style={styles.viewRodape}>

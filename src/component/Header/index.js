@@ -8,6 +8,7 @@ import {
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import Icons from "react-native-vector-icons/MaterialIcons";
+import { color } from "react-native-reanimated";
 
 function Header() {
   const navigation = useNavigation();
@@ -19,6 +20,7 @@ function Header() {
         <TouchableHighlight onPress={() => navigation.toggleDrawer()}>
           <Icons name={"menu"} color={"#ffd700"} size={35} />
         </TouchableHighlight>
+        <Text style={styles.title}>INFO</Text>
         <TouchableHighlight onPress={() => alert(123)}>
           <Icons name={"home"} color={"#ffd700"} size={35} />
         </TouchableHighlight>
@@ -36,6 +38,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
     padding: 5,
+  },
+  title: {
+    color: "#ffd700",
+    fontSize: 20,
+    fontWeight: "bold",
   },
 });
 

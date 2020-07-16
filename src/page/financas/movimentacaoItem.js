@@ -69,25 +69,6 @@ export default function movimentacaoItem(props) {
   }
 
   return (
-    // <TouchableWithoutFeedback onLongPress={() => handleDelete(props.param)}>
-    //   <View style={styles.container}>
-    //     <View style={styles.desc}>
-    //       <Text style={styles.font}>{props.param.desc}</Text>
-    //     </View>
-    //     <View style={styles.subDesc}>
-    //       <Text
-    //         style={[
-    //           styles.text,
-    //           props.param.tipo == "receita" ? styles.tipoGreen : styles.tipoRed,
-    //         ]}
-    //       >
-    //         {props.param.tipo}
-    //       </Text>
-    //       <Text style={styles.font2}>{props.param.valor}</Text>
-    //       <Text style={styles.font2}>{props.param.date}</Text>
-    //     </View>
-    //   </View>
-    // </TouchableWithoutFeedback>
     <TouchableWithoutFeedback onLongPress={() => handleDelete(props.param)}>
       <View style={styles.notificationBox}>
         <View>

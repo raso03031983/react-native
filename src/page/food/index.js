@@ -11,6 +11,7 @@ import Header from "../../component/Header";
 import Principal from "./principal";
 import Pedidos from "./pedidos";
 import Historico from "./historico";
+import Endereco from "./endereco";
 
 const Tab = createBottomTabNavigator();
 
@@ -39,6 +40,9 @@ export default function App() {
     Histórico: {
       name: "equalizer",
     },
+    Endereço: {
+      name: "map",
+    },
   };
 
   return (
@@ -60,6 +64,7 @@ export default function App() {
       >
         <Tab.Screen name="Principal" component={Principal} />
         <Tab.Screen name="Pedidos" component={Pedidos} />
+        <Tab.Screen name="Endereço" component={Endereco} />
         <Tab.Screen name="Histórico" component={Historico} />
       </Tab.Navigator>
     </>

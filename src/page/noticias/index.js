@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useState } from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Icons from "react-native-vector-icons/MaterialIcons";
 
@@ -30,6 +30,7 @@ export default function App() {
       name: "local-bar",
     },
   };
+  const [title, setTitle] = useState();
 
   return (
     <>

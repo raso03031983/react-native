@@ -19,7 +19,6 @@ export default function App() {
   const [nome, setNome] = useState("");
 
   function handleusuario() {
-    console.log(email, password, nome);
     if (!email || !password || !nome) {
       Toast.show("Todos os campos são obrigatórios");
       return;

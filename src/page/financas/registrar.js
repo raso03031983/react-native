@@ -17,8 +17,6 @@ import {
   Alert,
 } from "react-native";
 
-import Header from "../../component/Header";
-
 export default function financas(props) {
   const [formData, setFormData] = useState({});
   const [desc, setDesc] = useState({});
