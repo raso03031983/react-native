@@ -15,7 +15,7 @@
     "@react-navigation/bottom-tabs": "^5.5.2",
     "@react-navigation/drawer": "^5.8.2",
     "@react-navigation/native": "^5.5.1",
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "date-fns": "^2.14.0",
     "firebase": "^7.15.1",
     "moment": "^2.26.0",
